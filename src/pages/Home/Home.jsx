@@ -7,39 +7,133 @@ import { statusCheck } from "../../network/Connection";
 import WebsiteCard from "./Components/WebsiteCard";
 
 const Home = () => {
-    const [status, setStatus] = useState([
-        {
-            name: "Phaser Lab",
-            serverResponse: 200,
-            iframeCapture: "./media/yzuic_phaserLab.PNG",
-            link: "http://ccj.infocom.yzu.edu.tw",
-        },
-        {
-            name: "Exam Lab",
-            serverResponse: 200,
-            iframeCapture: "./media/yzuic_examLab.PNG",
-            link: "http://ccj.infocom.yzu.edu.tw:3000",
-        },
-        {
-            name: "Task Lab",
-            serverResponse: 200,
-            iframeCapture: "./media/yzuic_taskLab.PNG",
-            link: "http://ccj.infocom.yzu.edu.tw:3001",
-        },
-    ]);
+    const [taskLabStatus, setTaskLabStatus] = useState({
+        name: "Task Lab",
+        serverResponse: "",
+        iframeCapture: "./media/status_error.PNG",
+        serverMessage: "",
+        link: process.env.REACT_APP_TASKLAB_URL,
+    });
+
+    const [gameLib_109_Status, setGameLib_109_Status] = useState({
+        name: "Game Library (109)",
+        serverResponse: "",
+        iframeCapture: "./media/status_error.PNG",
+        serverMessage: "",
+        link: process.env.REACT_APP_GAMELIB_109_URL,
+    });
+
+    const [gameLib_110_Status, setGameLib_110_Status] = useState({
+        name: "Game Library (110)",
+        serverResponse: "",
+        iframeCapture: "./media/status_error.PNG",
+        serverMessage: "",
+        link: process.env.REACT_APP_GAMELIB_110_URL,
+    });
+
+    const [phaserLabStatus, setPhaserLabStatus] = useState({
+        name: "Phaser Lab",
+        serverResponse: "",
+        serverMessage: "",
+        iframeCapture: "./media/status_error.PNG",
+        link: process.env.REACT_APP_PHASERLAB_URL,
+    });
+
+    const [examLabStatus, setExamLabStatus] = useState({
+        name: "Exam Lab",
+        serverResponse: "",
+        serverMessage: "",
+        iframeCapture: "./media/status_error.PNG",
+        link: process.env.REACT_APP_EXAMLAB_URL,
+    });
 
     useEffect(() => {
-        // // 取得 phaserGameLab 訊息
-        // statusCheck.yzuic_PhaserGameLab().then(res => {
-        //     console.log(res)
-        //     // setStatus([
-        //     //     {
-        //     //         serverResponse: res.status,
-        //     //         iframeCapture: "./media/status_error.html",
-        //     //     },
-        //     // ]);
-        // });
+        checkTaskLabStatus();
+        checkGameLib_109_Status();
+        checkGameLib_110_Status();
+        checkPhaserGameLabStatus();
+        checkExamLabStatus();
     }, []);
+
+    // 取得 task Lab 訊息
+    const checkTaskLabStatus = () => {
+        statusCheck.yzuic_taskLab().then(res => {
+            setTaskLabStatus({
+                name: "Task Lab",
+                serverResponse: res.status,
+                serverMessage: res.message,
+                iframeCapture:
+                    res.status === 200
+                        ? "./media/yzuic_taskLab.PNG"
+                        : "./media/status_error.PNG",
+                link: process.env.REACT_APP_TASKLAB_URL,
+            });
+        });
+    };
+
+    // 取得 game Lib 109 訊息
+    const checkGameLib_109_Status = () => {
+        statusCheck.yzuic_gameLib_109().then(res => {
+            setGameLib_109_Status({
+                name: "Game Library (109)",
+                serverResponse: res.status,
+                serverMessage: res.message,
+                iframeCapture:
+                    res.status === 200
+                        ? "./media/yzuic_gameLib.PNG"
+                        : "./media/status_error.PNG",
+                link: process.env.REACT_APP_GAMELIB_109_URL,
+            });
+        });
+    };
+
+    // 取得 game Lib 110 訊息
+    const checkGameLib_110_Status = () => {
+        statusCheck.yzuic_gameLib_110().then(res => {
+            setGameLib_110_Status({
+                name: "Game Library (110)",
+                serverResponse: res.status,
+                serverMessage: res.message,
+                iframeCapture:
+                    res.status === 200
+                        ? "./media/yzuic_gameLib.PNG"
+                        : "./media/status_error.PNG",
+                link: process.env.REACT_APP_GAMELIB_110_URL,
+            });
+        });
+    };
+
+    // 取得 phaserGameLab 訊息
+    const checkPhaserGameLabStatus = () => {
+        statusCheck.yzuic_PhaserGameLab().then(res => {
+            setPhaserLabStatus({
+                name: "Phaser Lab(28102)",
+                serverResponse: res.status,
+                serverMessage: res.message,
+                iframeCapture:
+                    res.status === 200
+                        ? "./media/yzuic_phaserLab.PNG"
+                        : "./media/status_error.PNG",
+                link: process.env.REACT_APP_PHASERLAB_URL,
+            });
+        });
+    };
+
+    // 取得 Exam Lab 訊息
+    const checkExamLabStatus = () => {
+        statusCheck.yzuic_ExammingLab().then(res => {
+            setExamLabStatus({
+                name: "Exam Lab",
+                serverResponse: res.status,
+                serverMessage: res.message,
+                iframeCapture:
+                    res.status === 200
+                        ? "./media/yzuic_examLab.PNG"
+                        : "./media/status_error.PNG",
+                link: process.env.REACT_APP_EXAMLAB_URL,
+            });
+        });
+    };
 
     return (
         <Fade in={true} timeout={1500}>
@@ -74,7 +168,13 @@ const Home = () => {
                             <h1>Class Portal Center</h1>
                         </Box>
                         <Box>
-                            {status.map((value, index) => {
+                            {[
+                                taskLabStatus,
+                                gameLib_109_Status,
+                                gameLib_110_Status,
+                                phaserLabStatus,
+                                examLabStatus,
+                            ].map((value, index) => {
                                 return <WebsiteCard webInfo={value} />;
                             })}
                         </Box>

@@ -7,6 +7,9 @@ import {
     Button,
 } from "@mui/material";
 
+import CloudIcon from "@mui/icons-material/Cloud";
+import CloudOffIcon from "@mui/icons-material/CloudOff";
+
 const WebsiteCard = ({ webInfo }) => {
     const [handleHover, setHover] = useState(false);
 
@@ -14,6 +17,7 @@ const WebsiteCard = ({ webInfo }) => {
         <Card
             sx={{
                 minWidth: 200,
+                minHeight: 270,
                 transitionDuration: "0.3s",
                 display: "inline-block",
                 margin: 5,
@@ -38,7 +42,15 @@ const WebsiteCard = ({ webInfo }) => {
             />
             <CardContent sx={{ userSelect: "none" }}>
                 <h3>{webInfo.name}</h3>
-                <h5>伺服器狀態:{webInfo.serverResponse}</h5>
+                <h5>伺服器狀態</h5>
+                {webInfo.serverResponse === 200 ? (
+                    <CloudIcon color="success" />
+                ) : (
+                    <CloudOffIcon color="secondary" />
+                )}
+                {webInfo.serverMessage && (
+                    <h5>錯誤訊息:{webInfo.serverMessage}</h5>
+                )}
             </CardContent>
             <CardActions></CardActions>
         </Card>
